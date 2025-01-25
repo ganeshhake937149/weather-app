@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: linear-gradient(to bottom, #87ceeb, #f0f8ff);
+    }
+
+    .weather-app {
+      text-align: center;
+      background: rgb(250, 253, 232);
+      padding: 2rem;
+      border-radius: 10px;
+      box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+      max-width: 400px;
+      width: 100%;
+    }
+
+    input[type="text"] {
+      width: 80%;
+      padding: 0.5rem;
+      margin-bottom: 1rem;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+
+    button {
+      background-color: #007BFF;
+      color: white;
+      border: none;
+      padding: 0.5rem 1rem;
+      border-radius: 5px;
+      cursor: pointer;
+      font-size: 1rem;
+    }
+
+    button:hover {
+      background-color: #0056b3;
+    }
+
+    .result {
+      margin-top: 1rem;
+      font-size: 1.2rem;
+    }
+  </style>
+</head>
+<body>
+  <div class="weather-app">
+    <h1>Weather App</h1>
+    <input type="text" id="location" placeholder="Enter location" />
+    <button onclick="getWeather()">Get Weather</button>
+    <div class="result" id="result"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const location = document.getElementById('location').value;
+      const resultDiv = document.getElementById('result');
+      const apiKey = 'c5599ca56e0b42f5b4371907252501';
+
+      if (!location) {
+        resultDiv.innerText = 'Please enter a location.';
+        return;
+      }
+
+      const url = `http://api.weatherapi.com/v1/current.json?key=${apiKey}&q=${location}&aqi=yes`;
+
+      try {
+        const response = await fetch(url);
+        if (!response.ok) {
+          throw new Error('Failed to fetch weather data');
+        }
+
+        const data = await response.json();
+        const { temp_c, condition } = data.current;
+
+        resultDiv.innerHTML = `
+          <p>Temperature: <strong>${temp_c}°C</strong></p>
+          <p>Condition: <strong>${condition.text}</strong></p>
+        `;
+      } catch (error) {
+        resultDiv.innerText = 'Unable to fetch weather data. Please try again.';
+      }
+    }
+  </script>
+</body>
+</html>
